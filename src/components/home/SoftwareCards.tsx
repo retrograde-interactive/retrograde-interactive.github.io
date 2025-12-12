@@ -10,7 +10,7 @@ function SoftwareCards() {
           description="An original math puzzle game with procedurally generated levels"
           link="/#/operator"
           newTab
-          image="assets/operator.png"
+          image="assets/operator-banner.png"
           icons={mobileIcons}
         />
       </div>
