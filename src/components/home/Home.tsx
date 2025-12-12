@@ -2,7 +2,6 @@ import Footer from "../Footer";
 import SoftwareCards from "./SoftwareCards";
 
 function Home() {
-  const bannerImage = "assets/retrograde-banner.png";
   document.title = "Retrograde Interactive";
   var isDarkMode =
     window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
