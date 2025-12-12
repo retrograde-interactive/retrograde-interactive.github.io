@@ -1,4 +1,4 @@
-name: Deploy React App to GitHub Pages
+name: Deploy React App to GitHub Pages (Debug)
 
 on:
   push:
@@ -15,29 +15,27 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node (v18, No Cache)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "npm"
+          node-version: 18 # Trying a widely compatible LTS version
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install Dependencies (Strict)
+        # 'npm ci' is preferred for CI environments for speed and stability
+        run: npm ci --prefer-offline --no-audit
 
-      - name: Build React App
-        run: npm run build
+      - name: Build React App (Verbose)
+        run: npm run build -- --verbose
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
-          # Tells GitHub Pages this is a custom static site deployment
           static_site_generator: custom
 
       - name: Upload artifact
@@ -45,7 +43,6 @@ jobs:
         with:
           path: "./dist"
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages
