@@ -12,7 +12,7 @@ function Home() {
 
   document
     .querySelectorAll("meta[property=og\\:image]")[0]
-    .setAttribute("content", bannerImage);
+    .setAttribute("content", "assets/retrograde-page-image.png");
   document
     .querySelectorAll("meta[property=og\\:title]")[0]
     .setAttribute("content", document.title);
