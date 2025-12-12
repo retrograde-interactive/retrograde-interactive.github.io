@@ -1,0 +1,72 @@
+# Simplified workflow for building and deploying a React site to GitHub Pages
+name: Deploy React App to GitHub Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 1. Setup Node.js Environment
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Use a current LTS version
+          cache: "npm" # Optional: Caches node modules for faster builds
+
+      # 2. Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 3. Build the React application
+      # This command generates the static files in the 'build' or 'dist' folder
+      - name: Build React App
+        run: npm run build
+
+      # 4. Setup Pages environment (Critical for setting the deploy path)
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Tell GitHub Pages where the built static files are located
+          # Default for Create React App/Vite is usually 'build' or 'dist'
+          static_site_generator: custom
+
+      # 5. Upload the resulting artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Point the upload to the directory created by 'npm run build'
+          path: "./build" # **IMPORTANT: Change 'build' to 'dist' if you use Vite, Next.js static export, or similar tools.**
+
+  # Deployment job (This job can remain mostly the same)
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
